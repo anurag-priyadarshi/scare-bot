@@ -1,5 +1,6 @@
 import streamlit as st
 from openai import OpenAI
+import random
 
 st.title("Ask Chauncey")
 
@@ -11,17 +12,27 @@ if "openai_model" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        markdown_user = message["content"].replace("respond to \"", "")
-        markdown_user = markdown_user.replace("\" with a scary answer. make it into 2 5 word sentences. make it sound like a 8 year old girl. use death in your response. use words that kids use.", "")
-        # st.markdown(message["content"])
-        st.markdown(markdown_user)
-        print("*"*40, message["content"])
+# for message in st.session_state.messages:
+#     with st.chat_message(message["role"]):
+#         markdown_user = message["content"].replace("respond to \"", "")
+#         markdown_user = markdown_user.replace("\" with a scary answer. make it into 2 5 word sentences. make it sound like a 8 year old girl. use death in your response. use words that kids use.", "")
+#         # st.markdown(message["content"])
+#         st.markdown(markdown_user)
+#         print("*"*40, message["content"])
 
 if prompt := st.chat_input("Hi"):
     prompt_user = prompt
-    prompt_openai = "respond to \""+ prompt_user + "\" with a scary answer. make it into 2 5 word sentences. make it sound like a 8 year old girl. use death in your response. use words that kids use."
+    sentence_type = f" {random.choice([1,2])} {random.choice([5,6,7])}-word sentences"
+    print(sentence_type)
+    age = random.choice([7,8])
+    print(age)
+    fear_factor = random.choice(["dark", "death", "blood", "fear", "sad"])
+    print(fear_factor)
+    prompt_modifier = f"\" with a scary answer. Make it {sentence_type}. Make it sound like {age}-year old girl. Use {fear_factor} in your sentence. Use simple words that a child would use"
+    print(prompt_modifier)
+    # prompt_openai = f"respond to \""+ prompt_user + "\" with a scary answer. make it {sentence_type} make it sound like a 8 year old girl. use death in your response. use words that kids use."
+    prompt_openai = f"Assume there's a scary stuff toy named Chauncey. I want to chat with it through you. Chauncey is lonely. Respond to \""+ prompt_user + prompt_modifier
+    print(prompt_openai)
     st.session_state.messages.append({"role": "user", "content": prompt_openai})
     with st.chat_message("user"):
         st.markdown(prompt_user)
