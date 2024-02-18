@@ -1,2 +1,2 @@
 # scare-bot
-This bot is scare people
+This bot is scare to people
