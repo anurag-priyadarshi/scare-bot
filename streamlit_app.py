@@ -1,5 +1,5 @@
-from openai import OpenAI
 import streamlit as st
+from openai import OpenAI
 
 st.title("Ask Chauncey")
 
@@ -13,12 +13,18 @@ if "messages" not in st.session_state:
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+        markdown_user = message["content"].replace("respond to \"", "")
+        markdown_user = markdown_user.replace("\" with a scary answer. make it into 2 5 word sentences. make it sound like a 8 year old girl. use death in your response. use words that kids use.", "")
+        # st.markdown(message["content"])
+        st.markdown(markdown_user)
+        print("*"*40, message["content"])
 
-if prompt := st.chat_input("What is up?"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
+if prompt := st.chat_input("Hi"):
+    prompt_user = prompt
+    prompt_openai = "respond to \""+ prompt_user + "\" with a scary answer. make it into 2 5 word sentences. make it sound like a 8 year old girl. use death in your response. use words that kids use."
+    st.session_state.messages.append({"role": "user", "content": prompt_openai})
     with st.chat_message("user"):
-        st.markdown(prompt)
+        st.markdown(prompt_user)
 
     with st.chat_message("assistant"):
         stream = client.chat.completions.create(
@@ -30,4 +36,5 @@ if prompt := st.chat_input("What is up?"):
             stream=True,
         )
         response = st.write_stream(stream)
+        print("#"*40, st.session_state.messages)
     st.session_state.messages.append({"role": "assistant", "content": response})
